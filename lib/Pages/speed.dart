@@ -24,15 +24,42 @@ class _SpeedState extends State<Speed> {
   void abc() {
     final data = double.parse(_controller.text);
     double loc = 0.0;
-    switch (outputUnit) {
+    switch (inputUnit) {
       case 'm/sec':
-        loc = data * 1000 / 3600;
+        switch (outputUnit) {
+          case 'km/hrs':
+            loc = data * 3.6;
+            break;
+          case 'km/sec':
+            loc = data * 0.001;
+            break;
+          default:
+            loc = data;
+        }
         break;
       case 'km/sec':
-        loc = data / 3600;
+        switch (outputUnit) {
+          case 'm/sec':
+            loc = data * 1000;
+            break;
+          case 'km/hrs':
+            loc = data * 3600;
+            break;
+          default:
+            loc = data;
+        }
         break;
       default:
-        loc = data;
+        switch (outputUnit) {
+          case 'm/sec':
+            loc = data * 1000 / 3600;
+            break;
+          case 'km/sec':
+            loc = data / 3600;
+            break;
+          default:
+            loc = data;
+        }
     }
     setState(() {
       speed = loc.toStringAsFixed(3);

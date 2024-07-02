@@ -24,15 +24,42 @@ class _TemperatureState extends State<Temperature> {
   void abc() {
     final data = double.parse(_controller.text);
     double loc = 0.0;
-    switch (outputUnit) {
+    switch (inputUnit) {
       case 'deg F':
-        loc = (data * 9 / 5) + 32;
+        switch (outputUnit) {
+          case 'deg C':
+            loc = (data - 32) * 5 / 9;
+            break;
+          case 'deg K':
+            loc = ((data - 32) * 5 / 9) + 273.15;
+            break;
+          default:
+            loc = data;
+        }
         break;
       case 'deg K':
-        loc = data + 273.15;
+        switch (outputUnit) {
+          case 'deg F':
+            loc = ((data - 273.15) * 9 / 5) + 32;
+            break;
+          case 'deg C':
+            loc = data - 273.15;
+            break;
+          default:
+            loc = data;
+        }
         break;
       default:
-        loc = data;
+        switch (outputUnit) {
+          case 'deg F':
+            loc = (data * 9 / 5) + 32;
+            break;
+          case 'deg K':
+            loc = data + 273.15;
+            break;
+          default:
+            loc = data;
+        }
     }
     setState(() {
       temp = loc;
