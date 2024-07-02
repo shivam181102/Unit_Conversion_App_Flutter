@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'dart:ffi';
 
 class Temperature extends StatefulWidget {
   const Temperature({super.key});
@@ -15,8 +14,9 @@ class _TemperatureState extends State<Temperature> {
     'deg K',
   ];
 
-  String? selectedDropdownValue = 'deg F';
-  TextEditingController _controller = TextEditingController(text: '0');
+  String? outputUnit = 'deg F';
+  String? inputUnit = 'deg F';
+  final TextEditingController _controller = TextEditingController(text: '0');
   double temp = 0.0;
   final borders = OutlineInputBorder(
       borderSide: const BorderSide(color: Colors.black, width: 2),
@@ -24,7 +24,7 @@ class _TemperatureState extends State<Temperature> {
   void abc() {
     final data = double.parse(_controller.text);
     double loc = 0.0;
-    switch (selectedDropdownValue) {
+    switch (outputUnit) {
       case 'deg F':
         loc = (data * 9 / 5) + 32;
         break;
@@ -37,11 +37,185 @@ class _TemperatureState extends State<Temperature> {
     setState(() {
       temp = loc;
     });
-    print("$data : $temp");
+    // print("$data : $temp");
   }
 
   @override
   Widget build(BuildContext context) {
+    return OrientationBuilder(builder: (context, orientation) {
+      return (orientation == Orientation.portrait)
+          ? potraiteView()
+          : _landscapeView();
+    });
+  }
+
+  Scaffold _landscapeView() {
+    return Scaffold(
+      body: ListView(
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "TEMPERATURE",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "From Unit",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            DropdownButton<String>(
+                              value: outputUnit,
+                              icon: const Icon(Icons.arrow_downward),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                padding: const EdgeInsets.all(20),
+                                height: 0,
+                                color: Colors.black,
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  outputUnit = newValue;
+                                  temp = 0.0;
+                                });
+                              },
+                              items: dropdownItems.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Enter Temperature",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: _controller,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                hintText: 'Temperature',
+                                enabledBorder: borders,
+                                focusedBorder: borders,
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "To Unit",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            DropdownButton<String>(
+                              value: outputUnit,
+                              icon: const Icon(Icons.arrow_downward),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                padding: const EdgeInsets.all(20),
+                                height: 0,
+                                color: Colors.black,
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  outputUnit = newValue;
+                                  temp = 0.0;
+                                });
+                              },
+                              items: dropdownItems.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: abc,
+                    style: ButtonStyle(
+                      elevation: WidgetStateProperty.all(12),
+                      shadowColor: WidgetStateProperty.all(Colors.black),
+                      backgroundColor: WidgetStateProperty.all(Colors.black),
+                      fixedSize: WidgetStateProperty.all(
+                        Size(double.maxFinite, 50),
+                      ),
+                    ),
+                    child: const Text(
+                      "Convert",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    '$outputUnit : $temp',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Scaffold potraiteView() {
     return Scaffold(
       body: Center(
         child: Padding(
@@ -49,50 +223,114 @@ class _TemperatureState extends State<Temperature> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "TEMPERATURE",
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "From Unit",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      DropdownButton<String>(
+                        value: inputUnit,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
+                        underline: Container(
+                          padding: const EdgeInsets.all(20),
+                          height: 0,
+                          color: Colors.black,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            inputUnit = newValue;
+                            temp = 0;
+                          });
+                        },
+                        items: dropdownItems.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "To Unit",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButton<String>(
+                        value: outputUnit,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
+                        underline: Container(
+                          padding: const EdgeInsets.all(20),
+                          height: 0,
+                          color: Colors.black,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            outputUnit = newValue;
+                            temp = 0;
+                          });
+                        },
+                        items: dropdownItems.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               const Text(
-                "Enter Your temperature in deg C",
+                "Enter Your TEMPERATURE",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               TextField(
                 controller: _controller,
                 cursorColor: Colors.black,
                 decoration: InputDecoration(
-                    hintText: 'Temperature',
-                    enabledBorder: borders,
-                    focusedBorder: borders),
+                  hintText: 'tempgth',
+                  enabledBorder: borders,
+                  focusedBorder: borders,
+                ),
                 keyboardType: TextInputType.number,
               ),
-              DropdownButton<String>(
-                value: selectedDropdownValue,
-                icon: const Icon(Icons.arrow_downward),
-                iconSize: 24,
-                elevation: 16,
-                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                underline: Container(
-                  padding: EdgeInsets.all(20),
-                  height: 0,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedDropdownValue = newValue;
-                    temp = 0.0;
-                  });
-                },
-                items:
-                    dropdownItems.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              SizedBox(
+                height: 20,
               ),
               ElevatedButton(
                 onPressed: () {
@@ -104,8 +342,8 @@ class _TemperatureState extends State<Temperature> {
                         Color.fromARGB(255, 0, 0, 0)),
                     backgroundColor: WidgetStateProperty.all(
                         const Color.fromARGB(255, 0, 0, 0)),
-                    fixedSize:
-                        WidgetStatePropertyAll(Size(double.maxFinite, 50))),
+                    fixedSize: const WidgetStatePropertyAll(
+                        Size(double.maxFinite, 50))),
                 child: const Text(
                   "Convert",
                   style: TextStyle(
@@ -114,12 +352,12 @@ class _TemperatureState extends State<Temperature> {
                       fontWeight: FontWeight.w700),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
-                '$selectedDropdownValue : $temp',
-                style: TextStyle(
+                '$outputUnit : $temp',
+                style: const TextStyle(
                     fontSize: 24, decoration: TextDecoration.underline),
               )
             ],

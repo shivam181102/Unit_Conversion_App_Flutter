@@ -12,7 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String selectedPage = '';
-  Widget _currentPage = Temperature();
+  Widget _currentPage = const Distance();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.menu,
             color: Colors.white,
           ),
@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
             title: const Text('Distance'),
             onTap: () {
               setState(() {
-                _currentPage = Distance();
+                _currentPage = const Distance();
                 Navigator.pop(context);
               });
             },
@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
             title: const Text('Temperature'),
             onTap: () {
               setState(() {
-                _currentPage = Temperature();
+                _currentPage = const Temperature();
                 Navigator.pop(context);
               });
             },
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
             title: const Text('Speed'),
             onTap: () {
               setState(() {
-                _currentPage = Speed();
+                _currentPage = const Speed();
                 Navigator.pop(context);
               });
             },
